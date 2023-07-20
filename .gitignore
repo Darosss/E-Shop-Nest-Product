@@ -37,3 +37,7 @@ lerna-debug.log*
 
 # Environment
 .env
+
+
+# PB content 
+src/**/*.pb.ts
