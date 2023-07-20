@@ -70,6 +70,17 @@ export class ProductService implements OnModuleInit {
   public async createProduct(
     payload: CreateProductRequestDto,
   ): Promise<ProductOperationResponse> {
+    if (
+      (await firstValueFrom(this.categorySvc.findOne({ id: payload.category })))
+        .status !== HttpStatus.OK
+    ) {
+      return {
+        id: payload.category,
+        error: [`Category with provided id does not exist`],
+        message: 'Error',
+        status: HttpStatus.NOT_FOUND,
+      };
+    }
     const product: Product = new Product();
 
     product.name = payload.name;
