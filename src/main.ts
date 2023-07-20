@@ -1,9 +1,10 @@
 import { INestMicroservice, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { Transport } from '@nestjs/microservices';
+import { RpcException, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { AppModule } from './app.module';
 import { protobufPackage } from './product/pb/product.pb';
+import { status } from '@grpc/grpc-js';
 
 async function bootstrap() {
   const app: INestMicroservice = await NestFactory.createMicroservice(
@@ -18,7 +19,28 @@ async function bootstrap() {
     },
   );
 
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      forbidUnknownValues: true,
+      disableErrorMessages: true,
+      exceptionFactory: (errors) => {
+        const errorsList: string[] = [];
+        errors.forEach((x) => {
+          const errValidation = x.constraints;
+          for (const err in errValidation) {
+            errorsList.push(errValidation[err]);
+          }
+        });
+        return new RpcException({
+          code: status.INVALID_ARGUMENT,
+          message: errorsList,
+        });
+      },
+    }),
+  );
 
   await app.listen();
 }
