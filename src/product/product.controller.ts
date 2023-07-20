@@ -4,6 +4,7 @@ import {
   CreateProductRequestDto,
   FindOneRequestDto,
   DecreaseStockRequestDto,
+  UpdateProductRequestDto,
 } from './dto/product.dto';
 import {
   ProductOperationResponse,
@@ -31,6 +32,13 @@ export class ProductController {
     payload: CreateProductRequestDto,
   ): Promise<ProductOperationResponse> {
     return this.service.createProduct(payload);
+  }
+
+  @GrpcMethod(PRODUCT_SERVICE_NAME, 'UpdateProduct')
+  private updateProduct(
+    payload: UpdateProductRequestDto,
+  ): Promise<ProductOperationResponse> {
+    return this.service.updateProduct(payload);
   }
 
   @GrpcMethod(PRODUCT_SERVICE_NAME, 'FindOne')
