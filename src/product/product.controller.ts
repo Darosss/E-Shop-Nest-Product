@@ -19,6 +19,8 @@ import {
   DecreaseMultipleStockProductsResponse,
   SumProductsPriceResponse,
   SumProductsPriceRequest,
+  FindAllProductsRequest,
+  FindAllProductsResponse,
 } from './pb/product.pb';
 import { ProductService } from './product.service';
 
@@ -44,6 +46,13 @@ export class ProductController {
   @GrpcMethod(PRODUCT_SERVICE_NAME, 'FindOne')
   private findOne(payload: FindOneRequestDto): Promise<FindOneProductResponse> {
     return this.service.findOne(payload);
+  }
+
+  @GrpcMethod(PRODUCT_SERVICE_NAME, 'FindAll')
+  private findAll(
+    payload: FindAllProductsRequest,
+  ): Promise<FindAllProductsResponse> {
+    return this.service.findAll(payload);
   }
 
   @GrpcMethod(PRODUCT_SERVICE_NAME, 'DecreaseStock')
