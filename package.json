@@ -19,7 +19,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "proto:install": "npm i git+https://github.com/Darosss/E-Shop-Nest-Proto.git",
-    "proto:product": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto.cmd -I=./node_modules/e-shop-nest-proto/proto --ts_proto_out=src/product/ node_modules/e-shop-nest-proto/proto/product.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb"
+    "proto:product": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto.cmd -I=./node_modules/e-shop-nest-proto/proto --ts_proto_out=src/product/pb node_modules/e-shop-nest-proto/proto/product.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
+    "proto:category": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto.cmd -I=./node_modules/e-shop-nest-proto/proto --ts_proto_out=src/product/pb/ node_modules/e-shop-nest-proto/proto/category.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
+    "proto:all": "npm run proto:product && npm run proto:category"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.8.17",
