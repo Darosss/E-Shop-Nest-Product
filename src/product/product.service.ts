@@ -19,6 +19,8 @@ import {
   DecreaseMultipleStockProductsResponse,
   SumProductsPriceRequest,
   SumProductsPriceResponse,
+  FindAllProductsResponse,
+  FindAllProductsRequest,
 } from './pb/product.pb';
 import { StockDecreaseLog } from './entities/stock-decrease-log.entity';
 import { CATEGORY_SERVICE_NAME, CategoryServiceClient } from './pb/category.pb';
@@ -42,6 +44,27 @@ export class ProductService implements OnModuleInit {
     this.categorySvc = this.client.getService<CategoryServiceClient>(
       CATEGORY_SERVICE_NAME,
     );
+  }
+
+  public async findAll(
+    payload: FindAllProductsRequest,
+  ): Promise<FindAllProductsResponse> {
+    const products = await this.repository.findBy({
+      category: payload.category ?? undefined,
+    });
+    if (!products) {
+      return {
+        data: null,
+        error: ['Products not found'],
+        status: HttpStatus.NOT_FOUND,
+      };
+    }
+
+    return {
+      data: products,
+      error: null,
+      status: HttpStatus.OK,
+    };
   }
 
   public async findOne({
