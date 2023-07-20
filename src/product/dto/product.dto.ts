@@ -12,7 +12,6 @@ import {
   FindOneProductRequest,
   UpdateProductRequest,
 } from '../pb/product.pb';
-import { UpdateCategoryRequest } from '../pb/category.pb';
 
 export class FindOneRequestDto implements FindOneProductRequest {
   @IsNumber({ allowInfinity: false, allowNaN: false })
