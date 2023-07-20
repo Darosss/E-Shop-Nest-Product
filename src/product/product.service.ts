@@ -6,6 +6,7 @@ import {
   CreateProductRequestDto,
   DecreaseStockRequestDto,
   FindOneRequestDto,
+  UpdateProductRequestDto,
 } from './dto/product.dto';
 import {
   ProductOperationResponse,
@@ -97,6 +98,51 @@ export class ProductService implements OnModuleInit {
       id: product.id,
       error: null,
       message: 'Successfully created product',
+      status: HttpStatus.OK,
+    };
+  }
+
+  public async updateProduct(
+    payload: UpdateProductRequestDto,
+  ): Promise<ProductOperationResponse> {
+    const { id, name, description, stock, price, brand, category } = payload;
+
+    if (
+      payload.category &&
+      (await firstValueFrom(this.categorySvc.findOne({ id: payload.category })))
+        .status !== HttpStatus.OK
+    ) {
+      return {
+        id: payload.category,
+        error: [`Category with provided id does not exist`],
+        message: 'Error',
+        status: HttpStatus.NOT_FOUND,
+      };
+    }
+
+    const product = await this.repository.findOneBy({ id });
+
+    if (!product)
+      return {
+        id: id,
+        error: [`Product with provided id does not exist`],
+        message: 'Error',
+        status: HttpStatus.NOT_FOUND,
+      };
+
+    product.category = category || product.category;
+    product.name = name || product.name;
+    product.stock = stock || product.stock;
+    product.price = price || product.price;
+    product.brand = brand || product.brand;
+    product.description = description || product.description;
+
+    await this.repository.save(product);
+
+    return {
+      id: product.id,
+      error: null,
+      message: 'Successfully updated product',
       status: HttpStatus.OK,
     };
   }
