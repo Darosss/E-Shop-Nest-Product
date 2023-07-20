@@ -1,6 +1,6 @@
 import { HttpStatus, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import {
   CreateProductRequestDto,
@@ -49,8 +49,9 @@ export class ProductService implements OnModuleInit {
   public async findAll(
     payload: FindAllProductsRequest,
   ): Promise<FindAllProductsResponse> {
+    const categoryFilter = payload.categories;
     const products = await this.repository.findBy({
-      category: payload.category ?? undefined,
+      category: categoryFilter ? In(categoryFilter) : undefined,
     });
     if (!products) {
       return {
