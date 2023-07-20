@@ -6,10 +6,18 @@ import {
   DecreaseStockRequestDto,
 } from './dto/product.dto';
 import {
-  CreateProductResponse,
-  FindOneResponse,
+  ProductOperationResponse,
+  FindOneProductResponse,
   PRODUCT_SERVICE_NAME,
   DecreaseStockResponse,
+  GetProductsByIdsRequest,
+  GetProductsByIdsResponse,
+  CheckProductsQuantityAvailabilityRequest,
+  CheckProductsQuantityAvailabilityResponse,
+  DecreaseMultipleStockProductsRequest,
+  DecreaseMultipleStockProductsResponse,
+  SumProductsPriceResponse,
+  SumProductsPriceRequest,
 } from './pb/product.pb';
 import { ProductService } from './product.service';
 
@@ -21,12 +29,12 @@ export class ProductController {
   @GrpcMethod(PRODUCT_SERVICE_NAME, 'CreateProduct')
   private createProduct(
     payload: CreateProductRequestDto,
-  ): Promise<CreateProductResponse> {
+  ): Promise<ProductOperationResponse> {
     return this.service.createProduct(payload);
   }
 
   @GrpcMethod(PRODUCT_SERVICE_NAME, 'FindOne')
-  private findOne(payload: FindOneRequestDto): Promise<FindOneResponse> {
+  private findOne(payload: FindOneRequestDto): Promise<FindOneProductResponse> {
     return this.service.findOne(payload);
   }
 
@@ -35,5 +43,35 @@ export class ProductController {
     payload: DecreaseStockRequestDto,
   ): Promise<DecreaseStockResponse> {
     return this.service.decreaseStock(payload);
+  }
+
+  @GrpcMethod(PRODUCT_SERVICE_NAME, 'GetProductsByIds')
+  private getProductsByIds({
+    ids,
+  }: GetProductsByIdsRequest): Promise<GetProductsByIdsResponse> {
+    return this.service.getProductsByIds(ids);
+  }
+
+  @GrpcMethod(PRODUCT_SERVICE_NAME, 'CheckProductsQuantityAvailability')
+  private checkProductsQuantityAvailability({
+    products,
+  }: CheckProductsQuantityAvailabilityRequest): Promise<CheckProductsQuantityAvailabilityResponse> {
+    return this.service.checkProductsQuantityAvailability({
+      products,
+    });
+  }
+
+  @GrpcMethod(PRODUCT_SERVICE_NAME, 'DecreaseMultipleStockProducts')
+  private decreaseMultipleStockProducts(
+    payload: DecreaseMultipleStockProductsRequest,
+  ): Promise<DecreaseMultipleStockProductsResponse> {
+    return this.service.decreaseMultipleStockProducts(payload);
+  }
+
+  @GrpcMethod(PRODUCT_SERVICE_NAME, 'SumProductsPrice')
+  private sumProductsPrice({
+    products,
+  }: SumProductsPriceRequest): Promise<SumProductsPriceResponse> {
+    return this.service.sumProductsPrice({ products });
   }
 }

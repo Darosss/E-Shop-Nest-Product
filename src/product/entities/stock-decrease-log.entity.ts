@@ -4,6 +4,8 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Product } from './product.entity';
 
@@ -12,17 +14,30 @@ export class StockDecreaseLog extends BaseEntity {
   @PrimaryGeneratedColumn()
   public id!: number;
 
-  /*
-   * Relation IDs
-   */
+  @Column({ type: 'integer' })
+  userId: number;
+
+  @Column({ type: 'integer', nullable: true })
+  orderId: number;
 
   @Column({ type: 'integer' })
-  public orderId!: number;
+  quantity: number;
 
-  /*
-   * Many-To-One Relationships
-   */
+  @Column({ type: 'varchar' })
+  reason: string;
 
   @ManyToOne(() => Product, (product) => product.stockDecreaseLogs)
   public product: Product;
+
+  @Column({ type: 'integer', nullable: true })
+  previousStockQuantity: number;
+
+  @Column({ type: 'integer', nullable: true })
+  currentStockQuantity: number;
+
+  @CreateDateColumn()
+  public createdAt!: Date;
+
+  @UpdateDateColumn()
+  public updatedAt!: Date;
 }

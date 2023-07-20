@@ -1,11 +1,18 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+  Min,
+} from 'class-validator';
 import {
   CreateProductRequest,
   DecreaseStockRequest,
-  FindOneRequest,
+  FindOneProductRequest,
 } from '../pb/product.pb';
 
-export class FindOneRequestDto implements FindOneRequest {
+export class FindOneRequestDto implements FindOneProductRequest {
   @IsNumber({ allowInfinity: false, allowNaN: false })
   public readonly id: number;
 }
@@ -19,20 +26,46 @@ export class CreateProductRequestDto implements CreateProductRequest {
   @IsNotEmpty()
   public readonly sku: string;
 
+  @IsString()
+  @IsOptional()
+  public readonly description: string;
+
   @IsNumber({ allowInfinity: false, allowNaN: false })
+  @Min(0)
   public readonly stock: number;
 
   @IsNumber({ allowInfinity: false, allowNaN: false })
+  @IsPositive()
   public readonly price: number;
+
+  @IsString()
+  @IsNotEmpty()
+  public brand!: string;
+
+  @IsNumber({ allowInfinity: false, allowNaN: false })
+  @Min(0)
+  public category!: number;
 }
 
 export class DecreaseStockRequestDto implements DecreaseStockRequest {
+  @Min(0)
   @IsNumber({ allowInfinity: false, allowNaN: false })
   public readonly id: number;
 
+  @Min(0)
   @IsNumber({ allowInfinity: false, allowNaN: false })
+  public readonly userId: number;
+
+  @IsOptional()
+  @IsNumber({ allowInfinity: false, allowNaN: false })
+  @Min(0)
   public readonly orderId: number;
 
   @IsNumber({ allowInfinity: false, allowNaN: false })
+  @IsPositive()
   public readonly quantity: number;
+
+  @IsString()
+  @IsNotEmpty()
+  public readonly reason: string;
 }
