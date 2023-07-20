@@ -10,7 +10,9 @@ import {
   CreateProductRequest,
   DecreaseStockRequest,
   FindOneProductRequest,
+  UpdateProductRequest,
 } from '../pb/product.pb';
+import { UpdateCategoryRequest } from '../pb/category.pb';
 
 export class FindOneRequestDto implements FindOneProductRequest {
   @IsNumber({ allowInfinity: false, allowNaN: false })
@@ -68,4 +70,38 @@ export class DecreaseStockRequestDto implements DecreaseStockRequest {
   @IsString()
   @IsNotEmpty()
   public readonly reason: string;
+}
+
+export class UpdateProductRequestDto implements UpdateProductRequest {
+  @IsNumber({ allowInfinity: false, allowNaN: false })
+  id: number;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  public readonly name: string;
+
+  @IsString()
+  @IsOptional()
+  public readonly description: string;
+
+  @IsOptional()
+  @IsNumber({ allowInfinity: false, allowNaN: false })
+  @Min(0)
+  public readonly stock: number;
+
+  @IsOptional()
+  @IsNumber({ allowInfinity: false, allowNaN: false })
+  @IsPositive()
+  public readonly price: number;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  public brand!: string;
+
+  @IsOptional()
+  @IsNumber({ allowInfinity: false, allowNaN: false })
+  @Min(0)
+  public category!: number;
 }
