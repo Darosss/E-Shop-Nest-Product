@@ -21,6 +21,8 @@ import {
   SumProductsPriceResponse,
   FindAllProductsResponse,
   FindAllProductsRequest,
+  FindProductsCountByCategoryIdRequest,
+  FindProductsCountByCategoryIdResponse,
 } from './pb/product.pb';
 import { StockDecreaseLog } from './entities/stock-decrease-log.entity';
 import { CATEGORY_SERVICE_NAME, CategoryServiceClient } from './pb/category.pb';
@@ -290,5 +292,19 @@ export class ProductService implements OnModuleInit {
     }
 
     return { data: { price: sumPrice }, status: 200, error: null };
+  }
+
+  public async findProductsCountByCategoryId({
+    categoriesIds,
+  }: FindProductsCountByCategoryIdRequest): Promise<FindProductsCountByCategoryIdResponse> {
+    const productsCount = await this.repository.count({
+      where: { category: In(categoriesIds) },
+    });
+
+    return {
+      data: { productsCount },
+      status: 200,
+      error: null,
+    };
   }
 }
