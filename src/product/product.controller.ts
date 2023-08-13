@@ -21,6 +21,8 @@ import {
   SumProductsPriceRequest,
   FindAllProductsRequest,
   FindAllProductsResponse,
+  FindProductsCountByCategoryIdRequest,
+  FindProductsCountByCategoryIdResponse,
 } from './pb/product.pb';
 import { ProductService } from './product.service';
 
@@ -90,5 +92,12 @@ export class ProductController {
     products,
   }: SumProductsPriceRequest): Promise<SumProductsPriceResponse> {
     return this.service.sumProductsPrice({ products });
+  }
+
+  @GrpcMethod(PRODUCT_SERVICE_NAME, 'FindProductsCountByCategoryId')
+  private findProductsCountByCategoryId({
+    categoriesIds,
+  }: FindProductsCountByCategoryIdRequest): Promise<FindProductsCountByCategoryIdResponse> {
+    return this.service.findProductsCountByCategoryId({ categoriesIds });
   }
 }
