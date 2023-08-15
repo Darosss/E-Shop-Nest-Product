@@ -181,7 +181,7 @@ export class ProductService implements OnModuleInit {
     orderId,
   }: DecreaseStockRequestDto): Promise<DecreaseStockResponse> {
     const product: Product = await this.repository.findOne({
-      select: ['id', 'stock'],
+      select: ['id', 'stock', 'sold'],
       where: { id },
     });
 
@@ -204,6 +204,7 @@ export class ProductService implements OnModuleInit {
 
     await this.repository.update(product.id, {
       stock: product.stock - quantity,
+      sold: product.sold + quantity,
     });
 
     await this.decreaseLogRepository.insert({
