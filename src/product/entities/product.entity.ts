@@ -41,6 +41,9 @@ export class Product extends BaseEntity {
   )
   public stockDecreaseLogs: StockDecreaseLog[];
 
+  @Column({ type: 'integer', default: 0 })
+  public sold!: number;
+
   @CreateDateColumn()
   public createdAt!: Date;
 
