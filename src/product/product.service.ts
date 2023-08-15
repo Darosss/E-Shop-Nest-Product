@@ -48,13 +48,35 @@ export class ProductService implements OnModuleInit {
     );
   }
 
-  public async findAll(
-    payload: FindAllProductsRequest,
-  ): Promise<FindAllProductsResponse> {
-    const categoryFilter = payload.categories;
-    const products = await this.repository.findBy({
-      category: categoryFilter ? In(categoryFilter) : undefined,
-    });
+  public async findAll({
+    categories,
+    queries = {
+      sort: { sortBy: 'name', sortOrder: 1 },
+      pagination: { limit: 20, page: 0 },
+    },
+  }: FindAllProductsRequest): Promise<FindAllProductsResponse> {
+    const {
+      pagination,
+      sort: { sortOrder, sortBy },
+    } = queries;
+    const queryBuilder = this.repository.createQueryBuilder('product');
+
+    if (categories) {
+      queryBuilder.where('product.category IN (:...categories)', {
+        categories,
+      });
+    }
+    queryBuilder
+      .take(pagination.limit || 20)
+      .skip(pagination.page * pagination.limit || 0);
+
+    if (sortBy && sortBy) {
+      const columnName = sortBy;
+      queryBuilder.orderBy(columnName, sortOrder === 1 ? 'ASC' : 'DESC');
+    }
+
+    const products = await queryBuilder.getMany();
+
     if (!products) {
       return {
         data: null,
