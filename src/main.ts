@@ -1,48 +1,42 @@
-import { INestMicroservice, ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import { RpcException, Transport } from '@nestjs/microservices';
-import { join } from 'path';
-import { AppModule } from './app.module';
 import { protobufPackage } from './product/pb/product.pb';
-import { status } from '@grpc/grpc-js';
+import { protobufPackage as protobufProductPropertyCategoryPackage } from './product/pb/property-category.pb';
+import { protobufPackage as protobufProductPropertyPackage } from './product/pb/product-property.pb';
+import { protobufPackage as protobufPropertyPackage } from './product/pb/property.pb';
+
+import { createMicroservice, getValidationPipe } from './helpers';
 
 async function bootstrap() {
-  const app: INestMicroservice = await NestFactory.createMicroservice(
-    AppModule,
-    {
-      transport: Transport.GRPC,
-      options: {
-        url: '0.0.0.0:50053',
-        package: protobufPackage,
-        protoPath: join('node_modules/e-shop-nest-proto/proto/product.proto'),
-      },
-    },
-  );
+  const productsApp = await createMicroservice({
+    url: '0.0.0.0:50100',
+    protoName: 'product.proto',
+    packageName: protobufPackage,
+  });
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      forbidUnknownValues: true,
-      disableErrorMessages: true,
-      exceptionFactory: (errors) => {
-        const errorsList: string[] = [];
-        errors.forEach((x) => {
-          const errValidation = x.constraints;
-          for (const err in errValidation) {
-            errorsList.push(errValidation[err]);
-          }
-        });
-        return new RpcException({
-          code: status.INVALID_ARGUMENT,
-          message: errorsList,
-        });
-      },
-    }),
-  );
+  const productsPropertyCategoriesApp = await createMicroservice({
+    url: '0.0.0.0:50101',
+    protoName: 'property-category.proto',
+    packageName: protobufProductPropertyCategoryPackage,
+  });
+  const productsPropertyApp = await createMicroservice({
+    url: '0.0.0.0:50102',
+    protoName: 'product-property.proto',
+    packageName: protobufProductPropertyPackage,
+  });
+  const propertyApp = await createMicroservice({
+    url: '0.0.0.0:50103',
+    protoName: 'property.proto',
+    packageName: protobufPropertyPackage,
+  });
 
-  await app.listen();
+  productsApp.useGlobalPipes(getValidationPipe());
+  productsPropertyCategoriesApp.useGlobalPipes(getValidationPipe());
+  productsPropertyApp.useGlobalPipes(getValidationPipe());
+  propertyApp.useGlobalPipes(getValidationPipe());
+
+  await productsApp.listen();
+  await productsPropertyCategoriesApp.listen();
+  await productsPropertyApp.listen();
+  await propertyApp.listen();
 }
 
 bootstrap();
