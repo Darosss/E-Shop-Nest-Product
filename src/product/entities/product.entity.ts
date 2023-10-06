@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { StockDecreaseLog } from './stock-decrease-log.entity';
+import { ProductProperty } from 'src/product-property/entities/product-property.entity';
 
 @Entity()
 export class Product extends BaseEntity {
@@ -43,6 +44,12 @@ export class Product extends BaseEntity {
 
   @Column({ type: 'integer', default: 0 })
   public sold!: number;
+
+  @OneToMany(
+    () => ProductProperty,
+    (productProperty) => productProperty.product,
+  )
+  properties: ProductProperty[];
 
   @CreateDateColumn()
   public createdAt!: Date;
