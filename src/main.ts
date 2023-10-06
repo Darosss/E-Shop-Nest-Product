@@ -4,26 +4,31 @@ import { protobufPackage as protobufProductPropertyPackage } from './product/pb/
 import { protobufPackage as protobufPropertyPackage } from './product/pb/property.pb';
 
 import { createMicroservice, getValidationPipe } from './helpers';
+import {
+  PRODUCT_MICROSERVICE_URL,
+  PRODUCT_PROPERTY_MICROSERVICE_URL,
+  PROPERTY_CATEGORY_MICROSERVICE_URL,
+  PROPERTY_MICROSERVICE_URL,
+} from './configs';
 
 async function bootstrap() {
   const productsApp = await createMicroservice({
-    url: '0.0.0.0:50100',
+    url: PRODUCT_MICROSERVICE_URL,
     protoName: 'product.proto',
     packageName: protobufPackage,
   });
-
   const productsPropertyCategoriesApp = await createMicroservice({
-    url: '0.0.0.0:50101',
+    url: PROPERTY_CATEGORY_MICROSERVICE_URL,
     protoName: 'property-category.proto',
     packageName: protobufProductPropertyCategoryPackage,
   });
   const productsPropertyApp = await createMicroservice({
-    url: '0.0.0.0:50102',
+    url: PRODUCT_PROPERTY_MICROSERVICE_URL,
     protoName: 'product-property.proto',
     packageName: protobufProductPropertyPackage,
   });
   const propertyApp = await createMicroservice({
-    url: '0.0.0.0:50103',
+    url: PROPERTY_MICROSERVICE_URL,
     protoName: 'property.proto',
     packageName: protobufPropertyPackage,
   });
