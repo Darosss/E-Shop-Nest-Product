@@ -7,8 +7,8 @@ import {
 import { Property } from './entities/property.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PropertyCategoriesService } from 'src/property-categories/property-categories.service';
-import { PropertyCategory } from 'src/property-categories/entities/property-category.entity';
+import { PropertyCategoriesService } from 'src/property-category/property-categories.service';
+import { PropertyCategory } from 'src/property-category/entities/property-category.entity';
 import { PropertyCategoryOperationResponse } from 'src/product/pb/property-category.pb';
 
 @Injectable()

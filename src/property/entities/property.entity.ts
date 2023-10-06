@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ProductProperty } from 'src/product-property/entities/product-property.entity';
-import { PropertyCategory } from 'src/property-categories/entities/property-category.entity';
+import { PropertyCategory } from 'src/property-category/entities/property-category.entity';
 
 @Entity()
 export class Property extends BaseEntity {

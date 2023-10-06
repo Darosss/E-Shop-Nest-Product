@@ -4,7 +4,7 @@ import { PropertyController } from './property.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Property } from './entities/property.entity';
 import { ProductPropertyModule } from 'src/product-property/product-property.module';
-import { PropertyCategoriesModule } from 'src/property-categories/property-categories.module';
+import { PropertyCategoriesModule } from 'src/property-category/property-categories.module';
 
 @Module({
   imports: [
